@@ -1,61 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Jawaban Soal B
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📋 Deskripsi
 
-## About Laravel
+Aplikasi ini dibuat sebagai jawaban untuk **Soal B** dalam rangkaian technical test.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Teknologi yang Digunakan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend**: Laravel 11
+- **Frontend**: Bootstrap 5, Bootstrap Icons
+- **JavaScript**: Vanilla JS, SweetAlert2
+- **Database**: MySQL/PostgreSQL
+- **Authentication**: Laravel Breeze
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🚀 Quick Start (Instalasi Cepat)
 
-## Learning Laravel
+Untuk instalasi cepat, jalankan perintah berikut secara berurutan:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+# 1. Clone dan masuk ke direktori
+git clone <repository-url> && cd soal_b
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# 2. Install dependencies
+composer install && npm install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 3. Setup environment
+cp .env.example .env && php artisan key:generate
 
-## Laravel Sponsors
+# 4. Setup database (pastikan database sudah dibuat)
+php artisan migrate:fresh --seed
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 5. Build assets
+npm run build
 
-### Premium Partners
+# 6. Start server
+php artisan serve
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 👤 Test User Account
 
-## Contributing
+Setelah menjalankan seeder, Anda dapat login menggunakan akun test berikut:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+Username: testuser
+Password: 1234567890
+```
 
-## Code of Conduct
+## 🗂️ Struktur Database
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Hospitals Table
+- `id` - Primary Key
+- `name` - Nama Rumah Sakit
+- `address` - Alamat
+- `email` - Email (Unique)
+- `phone_number` - Nomor Telepon
+- `created_at`, `updated_at` - Timestamps
 
-## Security Vulnerabilities
+### Patients Table
+- `id` - Primary Key
+- `name` - Nama Pasien
+- `address` - Alamat
+- `phone_number` - Nomor Telepon
+- `hospital_id` - Foreign Key ke Hospitals
+- `created_at`, `updated_at` - Timestamps
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Users Table
+- `id` - Primary Key
+- `name` - Nama User
+- `email` - Email (Unique)
+- `password` - Password (Hashed)
+- `email_verified_at` - Email Verification
+- `created_at`, `updated_at` - Timestamps
 
-## License
+## 📝 API Endpoints
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Hospitals
+- `GET /hospitals/index` - List semua rumah sakit
+- `GET /hospitals/create` - Form tambah rumah sakit
+- `POST /hospitals` - Simpan rumah sakit baru
+- `GET /hospitals/{id}` - Detail rumah sakit
+- `GET /hospitals/{id}/edit` - Form edit rumah sakit
+- `PUT /hospitals/{id}` - Update rumah sakit
+- `DELETE /hospitals/{id}` - Hapus rumah sakit
+
+### Patients
+- `GET /patients/index` - List semua pasien
+- `GET /patients/create` - Form tambah pasien
+- `POST /patients` - Simpan pasien baru
+- `GET /patients/{id}` - Detail pasien
+- `GET /patients/{id}/edit` - Form edit pasien
+- `PUT /patients/{id}` - Update pasien
+- `DELETE /patients/{id}` - Hapus pasien

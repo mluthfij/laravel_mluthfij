@@ -3,41 +3,59 @@
 @section('title', 'Hospitals')
 
 @section('content')
-<div class="my-4">
-  <h1 class="mb-4 text-center">Data Rumah Sakit</h1>
-  <a href="{{ route('hospitals.create') }}" class="btn btn-primary">Create</a>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 text-dark fw-bold mb-0">Data Rumah Sakit</h1>
+    <a href="{{ route('hospitals.create') }}" class="btn btn-primary">
+      <i class="bi bi-plus-circle me-2"></i>Create Hospital
+    </a>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nama Rumah Sakit</th>
-        <th>Alamat</th>
-        <th>Email</th>
-        <th>Telepon</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($hospitals as $hospital)
-        <tr>
-          <td>{{ $hospital->id }}</td>
-          <td>{{ $hospital->name }}</td>
-          <td>{{ $hospital->adress }}</td>
-          <td>{{ $hospital->email }}</td>
-          <td>{{ $hospital->phone_number }}</td>
-          <td>
-            <a href="{{ route('hospitals.show', $hospital->id) }}">Show</a> |
-            <a href="{{ route('hospitals.edit', $hospital->id) }}">Edit</a> |
-            <form action="{{ route('hospitals.destroy', $hospital->id) }}" method="post"  onsubmit="return confirm('Apakah anda yakin ingin menghapus hospital ini?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form>
-          </td>
-        </tr>
-      @endforeach
-    </tbody>
-  </table>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="border-0">ID</th>
+              <th class="border-0">Nama Rumah Sakit</th>
+              <th class="border-0">Alamat</th>
+              <th class="border-0">Email</th>
+              <th class="border-0">Telepon</th>
+              <th class="border-0 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($hospitals as $hospital)
+              <tr>
+                <td class="fw-semibold text-dark">{{ $hospital->id }}</td>
+                <td class="text-dark">{{ $hospital->name }}</td>
+                <td class="text-dark">{{ $hospital->adress }}</td>
+                <td class="text-dark">{{ $hospital->email }}</td>
+                <td class="text-dark">{{ $hospital->phone_number }}</td>
+                <td class="text-center">
+                  <div class="btn-group" role="group">
+                    <a href="{{ route('hospitals.show', $hospital->id) }}" class="btn btn-outline-info btn-sm">
+                      <i class="bi bi-eye me-1"></i>Show
+                    </a>
+                    <a href="{{ route('hospitals.edit', $hospital->id) }}" class="btn btn-outline-warning btn-sm">
+                      <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                    <form action="{{ route('hospitals.destroy', $hospital->id) }}" method="post" class="d-inline" onsubmit="return confirm('Apakah anda yakin ingin menghapus hospital ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                          <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection

@@ -76,7 +76,39 @@ class HospitalController extends Controller
      */
     public function destroy(Hospital $hospital)
     {
-        $hospital->delete();
-        return redirect()->route('hospitals.index')->with('success', 'hospital telah dihapus.');
+        try {
+            // Debug logging
+            \Log::info('Delete request received', [
+                'hospital_id' => $hospital->id,
+                'is_ajax' => request()->ajax(),
+                'wants_json' => request()->wantsJson(),
+                'x_requested_with' => request()->header('X-Requested-With'),
+                'content_type' => request()->header('Content-Type')
+            ]);
+            
+            $hospital->delete();
+            
+            if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                \Log::info('Returning JSON response');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Hospital berhasil dihapus.'
+                ]);
+            }
+            
+            \Log::info('Returning redirect response');
+            return redirect()->route('hospitals.index')->with('success', 'Hospital telah dihapus.');
+        } catch (\Exception $e) {
+            \Log::error('Delete error', ['error' => $e->getMessage()]);
+            
+            if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus hospital: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->route('hospitals.index')->with('error', 'Gagal menghapus hospital.');
+        }
     }
 }

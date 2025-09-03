@@ -41,13 +41,11 @@
                     <a href="{{ route('patients.edit', $patient->id) }}" class="btn btn-outline-warning btn-sm">
                       <i class="bi bi-pencil me-1"></i>Edit
                     </a>
-                    <form action="{{ route('patients.destroy', $patient->id) }}" method="post" class="d-inline" onsubmit="return confirm('Apakah anda yakin ingin menghapus patient ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                          <i class="bi bi-trash me-1"></i>Delete
-                        </button>
-                    </form>
+                    <button type="button" class="btn btn-outline-danger btn-sm delete-patient" 
+                            data-id="{{ $patient->id }}" 
+                            data-name="{{ $patient->name }}">
+                      <i class="bi bi-trash me-1"></i>Delete
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -58,4 +56,10 @@
     </div>
   </div>
 </div>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Delete Manager JavaScript -->
+<script src="{{ asset('js/delete-manager.js') }}"></script>
 @endsection

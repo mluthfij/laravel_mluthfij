@@ -77,9 +77,41 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(patient $patient)
+    public function destroy(Patient $patient)
     {
-        $patient->delete();
-        return redirect()->route('patients.index')->with('success', 'patient telah dihapus.');
+        try {
+            // Debug logging
+            \Log::info('Delete request received', [
+                'patient_id' => $patient->id,
+                'is_ajax' => request()->ajax(),
+                'wants_json' => request()->wantsJson(),
+                'x_requested_with' => request()->header('X-Requested-With'),
+                'content_type' => request()->header('Content-Type')
+            ]);
+            
+            $patient->delete();
+            
+            if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                \Log::info('Returning JSON response');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Patient berhasil dihapus.'
+                ]);
+            }
+            
+            \Log::info('Returning redirect response');
+            return redirect()->route('patients.index')->with('success', 'Patient telah dihapus.');
+        } catch (\Exception $e) {
+            \Log::error('Delete error', ['error' => $e->getMessage()]);
+            
+            if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus patient: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->route('patients.index')->with('error', 'Gagal menghapus patient.');
+        }
     }
 }

@@ -59,8 +59,10 @@ class PatientController extends Controller
             'phone_number' => 'required',
             'hospital_id' => 'required',
         ]);
-        Patient::create($request->all());
-        return redirect()->route('patients.index')->with('success', 'patient created successfully.');
+        
+        $patient = Patient::create($request->all());
+        
+        return redirect()->route('patients.index')->with('success', 'Pasien berhasil ditambahkan!');
     }
 
     /**
@@ -93,7 +95,8 @@ class PatientController extends Controller
         ]);
 
         $patient->update($request->except(['_token', '_method']));
-        return redirect()->route('patients.show', $patient->id)->with('success', 'patient berhasil diperbarui.');
+        
+        return redirect()->route('patients.show', $patient->id)->with('success', 'Data pasien berhasil diperbarui!');
     }
 
     /**

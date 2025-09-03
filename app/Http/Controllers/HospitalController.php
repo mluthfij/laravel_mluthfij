@@ -35,8 +35,10 @@ class HospitalController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:hospitals,email'],
             'phone_number' => 'required',
         ]);
-        Hospital::create($request->all());
-        return redirect()->route('hospitals.index')->with('success', 'Hospital created successfully.');
+        
+        $hospital = Hospital::create($request->all());
+        
+        return redirect()->route('hospitals.index')->with('success', 'Rumah sakit berhasil ditambahkan!');
     }
 
     /**
@@ -68,7 +70,8 @@ class HospitalController extends Controller
         ]);
 
         $hospital->update($request->except(['_token', '_method']));
-        return redirect()->route('hospitals.show', $hospital->id)->with('success', 'hospital berhasil diperbarui.');
+        
+        return redirect()->route('hospitals.show', $hospital->id)->with('success', 'Data rumah sakit berhasil diperbarui!');
     }
 
     /**

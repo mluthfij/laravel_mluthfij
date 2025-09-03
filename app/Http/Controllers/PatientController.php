@@ -11,10 +11,32 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $patients = Patient::all();
-        return view('patients.index', compact('patients'));
+        $hospitals = Hospital::all();
+        $selectedHospital = $request->get('hospital_id');
+        
+        $query = Patient::with('hospital');
+        
+        if ($selectedHospital) {
+            $query->where('hospital_id', $selectedHospital);
+        }
+        
+        $patients = $query->get();
+        
+        if ($request->ajax()) {
+            \Log::info('AJAX request received', [
+                'hospital_id' => $selectedHospital,
+                'patients_count' => $patients->count()
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'html' => view('patients.partials.patient-table', compact('patients'))->render()
+            ]);
+        }
+        
+        return view('patients.index', compact('patients', 'hospitals', 'selectedHospital'));
     }
 
     /**

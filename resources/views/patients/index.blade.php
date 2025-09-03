@@ -11,6 +11,32 @@
     </a>
   </div>
 
+  <!-- Filter Section -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <label for="hospital-filter" class="form-label text-dark fw-semibold">
+            <i class="bi bi-hospital me-2"></i>Filter berdasarkan Rumah Sakit:
+          </label>
+          <select id="hospital-filter" class="form-select">
+            <option value="">Semua Rumah Sakit</option>
+            @foreach($hospitals as $hospital)
+              <option value="{{ $hospital->id }}" {{ $selectedHospital == $hospital->id ? 'selected' : '' }}>
+                {{ $hospital->name }}
+              </option>
+            @endforeach
+          </select>
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <button type="button" id="clear-filter" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-2"></i>Clear Filter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card shadow-sm">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -25,31 +51,8 @@
               <th class="border-0 text-center">Action</th>
             </tr>
           </thead>
-          <tbody>
-            @foreach ($patients as $patient)
-              <tr>
-                <td class="fw-semibold text-dark">{{ $patient->id }}</td>
-                <td class="text-dark">{{ $patient->name }}</td>
-                <td class="text-dark">{{ $patient->adress }}</td>
-                <td class="text-dark">{{ $patient->phone_number }}</td>
-                <td class="text-dark">{{ $patient->hospital->name }}</td>
-                <td class="text-center">
-                  <div class="btn-group" role="group">
-                    <a href="{{ route('patients.show', $patient->id) }}" class="btn btn-outline-info btn-sm">
-                      <i class="bi bi-eye me-1"></i>Show
-                    </a>
-                    <a href="{{ route('patients.edit', $patient->id) }}" class="btn btn-outline-warning btn-sm">
-                      <i class="bi bi-pencil me-1"></i>Edit
-                    </a>
-                    <button type="button" class="btn btn-outline-danger btn-sm delete-patient" 
-                            data-id="{{ $patient->id }}" 
-                            data-name="{{ $patient->name }}">
-                      <i class="bi bi-trash me-1"></i>Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            @endforeach
+          <tbody id="patient-table-body">
+            @include('patients.partials.patient-table', ['patients' => $patients])
           </tbody>
         </table>
       </div>

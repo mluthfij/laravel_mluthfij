@@ -53,6 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Delete functionality initialized');
     }
     
+    // Initialize filter functionality
+    initFilterFunctionality();
+    
     function showDeleteConfirmation(title, text) {
         return Swal.fire({
             title: title,
@@ -164,5 +167,102 @@ document.addEventListener('DOMContentLoaded', function() {
             'Tidak ada data patient',
             6
         );
+    }
+    
+    function initFilterFunctionality() {
+        const hospitalFilter = document.getElementById('hospital-filter');
+        const clearFilterBtn = document.getElementById('clear-filter');
+        
+        if (hospitalFilter) {
+            hospitalFilter.addEventListener('change', function() {
+                const hospitalId = this.value;
+                filterPatients(hospitalId);
+            });
+        }
+        
+        if (clearFilterBtn) {
+            clearFilterBtn.addEventListener('click', function() {
+                hospitalFilter.value = '';
+                filterPatients('');
+            });
+        }
+        
+        console.log('Filter functionality initialized');
+    }
+    
+    function filterPatients(hospitalId) {
+        console.log('Filtering patients for hospital ID:', hospitalId);
+        
+        // Show loading state
+        const tableBody = document.getElementById('patient-table-body');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>';
+        }
+        
+        // Prepare URL
+        let url = '/patients/index';
+        if (hospitalId) {
+            url += '?hospital_id=' + hospitalId;
+        }
+        
+        console.log('Requesting URL:', url);
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        const token = csrfToken ? csrfToken.getAttribute('content') : '';
+        
+        // Send AJAX request
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+            },
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            
+            if (data.success) {
+                // Update table body with new data
+                if (tableBody) {
+                    tableBody.innerHTML = data.html;
+                }
+                
+                // Re-initialize delete functionality for new rows
+                initDeleteFunctionality();
+                
+                console.log('Filter applied successfully');
+            } else {
+                throw new Error('Filter request failed');
+            }
+        })
+        .catch(error => {
+            console.error('Filter error:', error);
+            
+            // Show error message
+            if (tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading data. Please try again.</td></tr>';
+            }
+            
+            // Show error alert
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat memfilter data',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     }
 });

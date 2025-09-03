@@ -3,9 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ErrorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('hospitals.index');
+    }
     return redirect()->route('login');
 });
 
@@ -50,3 +54,13 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Error routes
+Route::get('/404', [ErrorController::class, 'notFound'])->name('error.404');
+Route::get('/500', [ErrorController::class, 'serverError'])->name('error.500');
+Route::get('/403', [ErrorController::class, 'forbidden'])->name('error.403');
+
+// Fallback route for any unmatched URLs - redirect to main page
+Route::fallback(function () {
+    return redirect()->route('hospitals.index')->with('error', 'Halaman yang Anda cari tidak ditemukan.');
+});
